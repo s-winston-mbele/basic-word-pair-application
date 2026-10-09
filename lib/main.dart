@@ -31,23 +31,50 @@ class MyAppState extends ChangeNotifier {
     current = WordPair.random();
     notifyListeners();
   }
+
+  //favourite functionality 
+  var favourite = <WordPair>[];
+
+  void toggleFavourite(){
+    if(favourite.contains(current)){
+      favourite.remove(current);
+    }else{
+      favourite.add(current);
+    }
+    notifyListeners();
+  }
 }
 
 class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    var appState = context.watch<MyAppState>();
-    var pair = appState.current;
+    var appState = context.watch<MyAppState>();//! important
+    var pair = appState.current;//! important
 
     return Scaffold(
       body: SafeArea(
-        child: Column(
-          children: [
-            Text('A random idea:'),
-            BigCard(pair: pair),
-        
-            ElevatedButton(onPressed: () { appState.getNext(); }, child: Text("Next"))
-          ],
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+          
+            children: [
+              Text('Random pair: '),
+              BigCard(pair: pair),
+              SizedBox(height: 10,),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(onPressed: () { appState.getNext(); }, child: Text("Next")),
+                  SizedBox(width: 8,),
+                  ElevatedButton.icon(
+                    onPressed: () {appState.toggleFavourite();},
+                    icon: Icon(Icons.favorite_border) ,
+                    label: Text('Like'),
+                  )
+                ],
+              )
+            ],
+          ),
         ),
       ),
     );
