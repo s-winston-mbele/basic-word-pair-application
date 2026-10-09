@@ -19,6 +19,7 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 224, 9, 9)),
         ),
         home: MyHomePage(),
+        debugShowCheckedModeBanner: false,
       ),
     );
   }
@@ -45,7 +46,68 @@ class MyAppState extends ChangeNotifier {
   }
 }
 
-class MyHomePage extends StatelessWidget {
+
+class MyHomePage extends StatefulWidget {
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+
+  var selectedIndex = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    //! Don't forget you can make widgets a variable
+    Widget page;
+    switch (selectedIndex) {
+      case 0:
+        page = GeneratorPage();
+        break;
+      case 1:
+        page = Placeholder();
+        break;
+      default:
+        throw UnimplementedError('no widget for $selectedIndex');
+    }
+
+    return Scaffold(
+      body: Row(
+        children: [
+          SafeArea(
+            child: NavigationRail(
+              extended: false,
+              destinations: [
+                NavigationRailDestination(
+                  icon: Icon(Icons.home),
+                  label: Text('Home'),
+                ),
+                NavigationRailDestination(
+                  icon: Icon(Icons.favorite),
+                  label: Text('Favorites'),
+                ),
+              ],
+              selectedIndex: selectedIndex,
+              onDestinationSelected: (value) {
+                setState(() {
+                  selectedIndex = value;
+                });
+              },
+            ),
+          ),
+          Expanded(
+            child: Container(
+              color: Theme.of(context).colorScheme.primaryContainer,
+              child: GeneratorPage(),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class GeneratorPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<MyAppState>();//! important
@@ -53,33 +115,29 @@ class MyHomePage extends StatelessWidget {
 
     IconData icon = appState.favourites.contains(pair) ? Icons.favorite : Icons.favorite_border;
 
-    return Scaffold(
-      body: SafeArea(
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+    return Center(
+            child: Column(
+             mainAxisAlignment: MainAxisAlignment.center,
           
-            children: [
-              Text('Random pair: '),
-              BigCard(pair: pair),
-              SizedBox(height: 10,),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ElevatedButton.icon(
-                    onPressed: () {appState.toggleFavourite();},
-                    icon: Icon(icon),
-                    label: Text('Like'),
-                  ),
-                  SizedBox(width: 8,),
-                  ElevatedButton(onPressed: () { appState.getNext(); }, child: Text("Next")),
-                ],
-              )
-            ],
+              children: [
+                Text('Random pair: '),
+                BigCard(pair: pair),
+                SizedBox(height: 10,),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                   ElevatedButton.icon(
+                      onPressed: () {appState.toggleFavourite();},
+                      icon: Icon(icon),
+                      label: Text('Like'),
+                    ),
+                    SizedBox(width: 8,),
+                    ElevatedButton(onPressed: () { appState.getNext(); }, child: Text("Next")),
+                  ],
+               )
+             ],
           ),
-        ),
-      ),
-    );
+        );
   }
 }
 
