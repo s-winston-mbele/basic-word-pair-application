@@ -33,13 +33,13 @@ class MyAppState extends ChangeNotifier {
   }
 
   //favourite functionality 
-  var favourite = <WordPair>[];
+  var favourites = <WordPair>[];
 
   void toggleFavourite(){
-    if(favourite.contains(current)){
-      favourite.remove(current);
+    if(favourites.contains(current)){
+      favourites.remove(current);
     }else{
-      favourite.add(current);
+      favourites.add(current);
     }
     notifyListeners();
   }
@@ -50,6 +50,8 @@ class MyHomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     var appState = context.watch<MyAppState>();//! important
     var pair = appState.current;//! important
+
+    IconData icon = appState.favourites.contains(pair) ? Icons.favorite : Icons.favorite_border;
 
     return Scaffold(
       body: SafeArea(
@@ -64,13 +66,13 @@ class MyHomePage extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  ElevatedButton(onPressed: () { appState.getNext(); }, child: Text("Next")),
-                  SizedBox(width: 8,),
                   ElevatedButton.icon(
                     onPressed: () {appState.toggleFavourite();},
-                    icon: Icon(Icons.favorite_border) ,
+                    icon: Icon(icon),
                     label: Text('Like'),
-                  )
+                  ),
+                  SizedBox(width: 8,),
+                  ElevatedButton(onPressed: () { appState.getNext(); }, child: Text("Next")),
                 ],
               )
             ],
