@@ -47,7 +47,7 @@ class MyAppState extends ChangeNotifier {
     notifyListeners();
   }
 
-  void removeFavourite(wordToRemove){
+  void removeFavourite(WordPair wordToRemove){
     favourites.remove(wordToRemove);
     notifyListeners();
   }
@@ -68,10 +68,8 @@ class _MyHomePageState extends State<MyHomePage> {
     switch (selectedIndex) {
       case 0:
         page = GeneratorPage();
-        break;
       case 1:
         page = FavoritesPage();
-        break;
       default:
         throw UnimplementedError('no widget for $selectedIndex');
     }
@@ -223,4 +221,3 @@ class BigCard extends StatelessWidget {
     );
   }
 }
-
